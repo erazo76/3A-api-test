@@ -7,7 +7,6 @@ import { RegisterUserDto } from '../dtos/register-user.dto';
 import { User } from '../entities/user.entity';
 import { JwtPayload } from '../interfaces/jwt-payload.interface';
 import { EncoderService } from './encoder.service';
-import { v4 } from 'uuid';
 
 @Injectable()
 export class AuthService {
@@ -21,7 +20,7 @@ export class AuthService {
     async registerUser(registerUserDto: RegisterUserDto): Promise<void> {
         let { name, email, password } = registerUserDto;
         password = await  this.encoderService.encodePassword(password);
-        const activationToken = v4();
+        
         try { 
             const registered = new this.userModel({name,email,password});            
             await registered.save();
@@ -40,12 +39,13 @@ export class AuthService {
           user &&
           (await this.encoderService.checkPassword(password, user.password))
         ) {
-          const payload: JwtPayload = { id: user.id, email, active: user.active };
+          const payload: JwtPayload = { id: user.id, email, active: user.active, name: user.name };
           const accessToken = this.jwtService.sign(payload);    
           return { 
             id: user.id,
             email: user.email,
-            token: accessToken
+            token: accessToken,
+            name: user.name
           };
         }
         throw new UnauthorizedException('Please check your credentials');

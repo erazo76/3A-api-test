@@ -20,9 +20,31 @@ export class ProductController {
 
     @Get()
     @UseGuards(AuthGuard())         
-    async getProducts(@Res() res:Response, @Query() productDto: ProductDto): Promise<any>{
-      let product = await this.productService.getProducts(productDto);
-      if(product.length < 1){
+    async getProducts(@Res() res:Response, @Query() query): Promise<any>{
+      let limit;
+      let page;
+      if (
+        query.limit != null &&
+        query.limit != 'null' &&
+        query.limit != undefined &&
+        query.limit != 'undefined'
+      ) {
+        limit = parseInt(query.limit);
+      } else {
+        limit = null;
+      }
+      if (
+        query.page != null &&
+        query.page != 'null' &&
+        query.page != undefined &&
+        query.page != 'undefined'
+      ) {
+        page = parseInt(query.page);
+      } else {
+        page = null;
+      }
+      let product = await this.productService.getProducts(limit,page);
+      if(product.res.length < 1){
         return res.status(HttpStatus.NOT_FOUND).json({message:'There is no data'});       
       } 
       return res.status(HttpStatus.OK).json(product);        

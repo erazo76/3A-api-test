@@ -12,7 +12,7 @@ export class Product extends Document {
     @Prop({required:false, length: 20 })
     price: number;
 
-    @Prop({required:false,type:Types.ObjectId, ref: User.name}) // user ID reference
+    @Prop({ type:Types.ObjectId, ref: User.name }) // user ID reference
     owner: User | Types.ObjectId; 
 
 }

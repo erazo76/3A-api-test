@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsOptional, Length, Matches } from "class-validator";
+import { IsArray, IsEmail, IsNotEmpty, IsOptional, Length, Matches } from "class-validator";
 
 export class RegisterUserDto{
     

@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { MongooseModule } from '@nestjs/mongoose';
 import { PassportModule } from '@nestjs/passport';
+import { User, UserSchema } from '../auth/entities/user.entity';
 import { ProductController } from './controllers/product.controller';
 import { Product, ProductSchema } from './entities/product.entity';
 import { ProductService } from './services/product.service';
@@ -23,6 +24,10 @@ import { ProductService } from './services/product.service';
       {
         name: Product.name,
         schema: ProductSchema,
+      },
+      {
+        name: User.name,
+        schema: UserSchema,
       },
     ]),
   ],

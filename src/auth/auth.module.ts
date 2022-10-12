@@ -8,6 +8,7 @@ import { AuthService } from './services/auth.service';
 import { EncoderService } from './services/encoder.service';
 import { JwtStrategy } from './jwt.strategy';
 import { ConfigService } from '@nestjs/config';
+import { Product, ProductSchema } from '../product/entities/product.entity';
 
 
 @Module({
@@ -25,6 +26,10 @@ import { ConfigService } from '@nestjs/config';
       {
         name: User.name,
         schema: UserSchema,
+      },
+      {
+        name: Product.name,
+        schema: ProductSchema,
       },
     ]),
   ],
