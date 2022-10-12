@@ -1,8 +1,7 @@
-import { Injectable, Logger} from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { CreateProductDto } from '../dtos/create-product.dto';
-import { ProductDto } from '../dtos/product.dto';
+import { CreateProductDto, UpdateProductDto } from '../dtos/create-product.dto';
 import { Product } from '../entities/product.entity';
 
 @Injectable()
@@ -46,9 +45,46 @@ export class ProductService {
       }
   }  
 
-  async updateProduct(productDto: ProductDto): Promise<any> {
+  async updateProduct(upadateProductDto: UpdateProductDto, id: string, ownerId:string): Promise<any> {
+    let {  name, price } = upadateProductDto;
+    const owner = await this.productModel.find({_id: id}); 
+    
+    try {  
+      if(owner[0] == undefined){
+        return 1;
+      }  
 
+      if(JSON.stringify(owner[0].owner) != JSON.stringify(ownerId)){
+        return 0;
+      }
+      const products = await this.productModel.findOneAndUpdate(
+        { _id: id },
+        { $set: { name, price } },
+        { useFindAndModify: true, returnOriginal: false }
+      );
+      return products;
+    } catch (error) {
+      Logger.error(error);
+     
+    }
   }  
+
+  async removeProduct(id:string, ownerId: string ): Promise<any> {
+    const owner = await this.productModel.find({_id: id});
+    
+    try {   
+      if(owner[0] == undefined){
+        return 1;
+      }    
+      if(JSON.stringify(owner[0].owner) != JSON.stringify(ownerId)){
+        return 0;
+      }     
+      const deleted = await this.productModel.findOneAndDelete({_id: id});            
+      return deleted;
+    } catch (e) {
+      console.log(e);
+    }
+  } 
 
 }
 
