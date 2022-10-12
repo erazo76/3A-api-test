@@ -7,19 +7,19 @@ import { AuthService } from '../services/auth.service';
 @ApiTags('User Auth')
 @Controller('auth')
 export class AuthController {
-    constructor (private authService: AuthService){}
+  constructor(private authService: AuthService) {}
 
-    @Post('/register')    
-    @ApiResponse({ type: RegisterUserDto, status: 200 })
-    @ApiOperation({summary:'Register a user by name, email and password'})
-    register(@Body()registerUserDto: RegisterUserDto): Promise<void>{
-        return this.authService.registerUser(registerUserDto);
-    }
+  @Post('/register')
+  @ApiResponse({ type: RegisterUserDto, status: 200 })
+  @ApiOperation({ summary: 'Register a user by name, email and password' })
+  register(@Body() registerUserDto: RegisterUserDto): Promise<void> {
+    return this.authService.registerUser(registerUserDto);
+  }
 
-    @Post('/login')
-    @ApiResponse({ type: LoginDto, status: 200 })
-    @ApiOperation({summary:'Login a user by email and password'})
-    login(@Body()loginDto: LoginDto): Promise<{ accessToken: string }>{
-        return this.authService.login(loginDto);
-    }  
+  @Post('/login')
+  @ApiResponse({ type: LoginDto, status: 200 })
+  @ApiOperation({ summary: 'Login a user by email and password' })
+  login(@Body() loginDto: LoginDto): Promise<{ accessToken: string }> {
+    return this.authService.login(loginDto);
+  }
 }

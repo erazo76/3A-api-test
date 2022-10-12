@@ -5,27 +5,22 @@ import config from '../config';
 
 @Global()
 @Module({
-    imports:[
-        MongooseModule.forRootAsync({ // 👈 Implement Module
-            useFactory: (configService: ConfigType<typeof config>) => {
-              const {
-                connection,
-                user,
-                password,
-                host,
-                port,
-                dbName,
-              } = configService.mongo;
-              return {
-                uri: `${connection}://${host}:${port}`,
-                user,
-                pass: password,
-                dbName,
-              };
-            },
-            inject: [config.KEY],
-          }),
-    ],
-    exports:[MongooseModule],
+  imports: [
+    MongooseModule.forRootAsync({
+      // 👈 Implement Module
+      useFactory: (configService: ConfigType<typeof config>) => {
+        const { connection, user, password, host, port, dbName } =
+          configService.mongo;
+        return {
+          uri: `${connection}://${host}:${port}`,
+          user,
+          pass: password,
+          dbName,
+        };
+      },
+      inject: [config.KEY],
+    }),
+  ],
+  exports: [MongooseModule],
 })
 export class DatabaseModule {}

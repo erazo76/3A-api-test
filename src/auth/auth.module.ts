@@ -10,17 +10,16 @@ import { JwtStrategy } from './jwt.strategy';
 import { ConfigService } from '@nestjs/config';
 import { Product, ProductSchema } from '../product/entities/product.entity';
 
-
 @Module({
-  imports:[
+  imports: [
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.registerAsync({
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => {
         return {
           secret: configService.get<string>('JWT_SECRET'),
-        }
-      }
+        };
+      },
     }),
     MongooseModule.forFeature([
       {
@@ -34,7 +33,7 @@ import { Product, ProductSchema } from '../product/entities/product.entity';
     ]),
   ],
   controllers: [AuthController],
-  providers: [AuthService, EncoderService,JwtStrategy],
-  exports: [JwtStrategy,PassportModule],
+  providers: [AuthService, EncoderService, JwtStrategy],
+  exports: [JwtStrategy, PassportModule],
 })
 export class AuthModule {}

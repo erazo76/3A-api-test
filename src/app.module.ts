@@ -10,7 +10,7 @@ import { ProductModule } from './product/product.module';
   imports: [
     AuthModule,
     DatabaseModule,
-    ProductModule,    
+    ProductModule,
     ConfigModule.forRoot({
       envFilePath: enviroments[process.env.NODE_ENV] || '.env',
       load: [config],

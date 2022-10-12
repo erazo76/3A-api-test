@@ -6,10 +6,11 @@ import { PassportModule } from '@nestjs/passport';
 import { User, UserSchema } from '../auth/entities/user.entity';
 import { ProductController } from './controllers/product.controller';
 import { Product, ProductSchema } from './entities/product.entity';
+import { CREATE_PRODUCT_SERVICE } from './interfaces/product.interface';
 import { ProductService } from './services/product.service';
 
 @Module({
-  imports:[   
+  imports: [
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.registerAsync({
       inject: [ConfigService],
@@ -17,8 +18,8 @@ import { ProductService } from './services/product.service';
         return {
           secret: configService.get<string>('JWT_SECRET'),
           signOptions: { expiresIn: configService.get<string>('EXPIRES_IN') },
-        }
-      }
+        };
+      },
     }),
     MongooseModule.forFeature([
       {
@@ -32,6 +33,11 @@ import { ProductService } from './services/product.service';
     ]),
   ],
   controllers: [ProductController],
-  providers: [ProductService]
+  providers: [
+    {
+      useClass: ProductService,
+      provide: CREATE_PRODUCT_SERVICE,
+    },
+  ],
 })
 export class ProductModule {}
