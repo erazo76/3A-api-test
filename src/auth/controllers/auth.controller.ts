@@ -1,25 +1,41 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  HttpStatus,
+  Inject,
+  Post,
+  Res,
+} from '@nestjs/common';
+import { Response } from 'express';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { LoginDto } from '../dtos/login.dto';
 import { RegisterUserDto } from '../dtos/register-user.dto';
-import { AuthService } from '../services/auth.service';
+import { AUTH_SERVICE, IAuthService } from '../interfaces/auth.interface';
 
 @ApiTags('User Auth')
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(
+    @Inject(AUTH_SERVICE)
+    private readonly authService: IAuthService, //private authService: AuthService
+  ) {}
 
   @Post('/register')
-  @ApiResponse({ type: RegisterUserDto, status: 200 })
+  @ApiResponse({ type: RegisterUserDto, status: 201 })
   @ApiOperation({ summary: 'Register a user by name, email and password' })
-  register(@Body() registerUserDto: RegisterUserDto): Promise<void> {
-    return this.authService.registerUser(registerUserDto);
+  async register(
+    @Res() res: Response,
+    @Body() registerUserDto: RegisterUserDto,
+  ): Promise<any> {
+    const response = await this.authService.registerUser(registerUserDto);
+    return res.status(HttpStatus.CREATED).json(response);
   }
 
   @Post('/login')
   @ApiResponse({ type: LoginDto, status: 200 })
   @ApiOperation({ summary: 'Login a user by email and password' })
-  login(@Body() loginDto: LoginDto): Promise<{ accessToken: string }> {
-    return this.authService.login(loginDto);
+  async login(@Res() res: Response, @Body() loginDto: LoginDto): Promise<any> {
+    const response = await this.authService.login(loginDto);
+    res.status(HttpStatus.OK).json(response);
   }
 }

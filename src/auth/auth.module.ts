@@ -9,6 +9,7 @@ import { EncoderService } from './services/encoder.service';
 import { JwtStrategy } from './jwt.strategy';
 import { ConfigService } from '@nestjs/config';
 import { Product, ProductSchema } from '../product/entities/product.entity';
+import { AUTH_SERVICE } from './interfaces/auth.interface';
 
 @Module({
   imports: [
@@ -33,7 +34,14 @@ import { Product, ProductSchema } from '../product/entities/product.entity';
     ]),
   ],
   controllers: [AuthController],
-  providers: [AuthService, EncoderService, JwtStrategy],
+  providers: [
+    {
+      useClass: AuthService,
+      provide: AUTH_SERVICE,
+    },
+    EncoderService,
+    JwtStrategy,
+  ],
   exports: [JwtStrategy, PassportModule],
 })
 export class AuthModule {}

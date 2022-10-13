@@ -11,11 +11,12 @@ import { Model } from 'mongoose';
 import { LoginDto } from '../dtos/login.dto';
 import { RegisterUserDto } from '../dtos/register-user.dto';
 import { User } from '../entities/user.entity';
+import { IAuthService } from '../interfaces/auth.interface';
 import { JwtPayload } from '../interfaces/jwt-payload.interface';
 import { EncoderService } from './encoder.service';
 
 @Injectable()
-export class AuthService {
+export class AuthService implements IAuthService {
   logger: Logger;
   constructor(
     @InjectModel(User.name) private userModel: Model<User>,
@@ -30,7 +31,7 @@ export class AuthService {
    * @param {RegisterUserDto} registerUserDto - RegisterUserDto - This is the DTO that we created
    * earlier.
    */
-  async registerUser(registerUserDto: RegisterUserDto): Promise<void> {
+  async registerUser(registerUserDto: RegisterUserDto): Promise<any> {
     let { password } = registerUserDto;
     const { email, name } = registerUserDto;
 
@@ -39,6 +40,11 @@ export class AuthService {
     try {
       const registered = new this.userModel({ name, email, password });
       await registered.save();
+      return{
+        error:false,
+        message:'User successful register',
+        data: registered
+      }
     } catch (e) {
       if (e.code === 11000) {
         throw new ConflictException('This email is already registered');
@@ -70,13 +76,17 @@ export class AuthService {
         email,
         active: user.active,
         name: user.name,
-      };
+      };  
       const accessToken = this.jwtService.sign(payload);
       return {
-        id: user.id,
-        email: user.email,
-        token: accessToken,
-        name: user.name,
+        error: false,
+        message:'User successfully logged',
+        data:{
+            name: user.name,
+            id: user.id,
+            email: user.email,
+            token: accessToken,
+        },        
       };
     }
     throw new UnauthorizedException('Please check your credentials');

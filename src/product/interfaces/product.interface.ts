@@ -1,6 +1,6 @@
 import { CreateProductDto, UpdateProductDto } from '../dtos/create-product.dto';
 
-export const CREATE_PRODUCT_SERVICE = 'CREATE PRODUCT SERVICE';
+export const PRODUCT_SERVICE = 'PRODUCT SERVICE';
 
 export interface ICreateProductService {
   create(createProductDto: CreateProductDto, owner: string): Promise<any>;

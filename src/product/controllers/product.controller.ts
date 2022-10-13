@@ -24,7 +24,7 @@ import {
 } from '@nestjs/swagger';
 import { CreateProductDto, UpdateProductDto } from '../dtos/create-product.dto';
 import {
-  CREATE_PRODUCT_SERVICE,
+  PRODUCT_SERVICE,
   ICreateProductService,
 } from '../interfaces/product.interface';
 
@@ -33,7 +33,7 @@ import {
 export class ProductController {
   // constructor (private productService: ProductService){}
   constructor(
-    @Inject(CREATE_PRODUCT_SERVICE)
+    @Inject(PRODUCT_SERVICE)
     private readonly productService: ICreateProductService,
   ) {}
   @Post()

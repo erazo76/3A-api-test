@@ -3,10 +3,13 @@ import { ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { MongooseModule } from '@nestjs/mongoose';
 import { PassportModule } from '@nestjs/passport';
+import { AUTH_SERVICE } from 'src/auth/interfaces/auth.interface';
+import { AuthService } from 'src/auth/services/auth.service';
+import { EncoderService } from 'src/auth/services/encoder.service';
 import { User, UserSchema } from '../auth/entities/user.entity';
 import { ProductController } from './controllers/product.controller';
 import { Product, ProductSchema } from './entities/product.entity';
-import { CREATE_PRODUCT_SERVICE } from './interfaces/product.interface';
+import { PRODUCT_SERVICE } from './interfaces/product.interface';
 import { ProductService } from './services/product.service';
 
 @Module({
@@ -36,8 +39,13 @@ import { ProductService } from './services/product.service';
   providers: [
     {
       useClass: ProductService,
-      provide: CREATE_PRODUCT_SERVICE,
+      provide: PRODUCT_SERVICE,
     },
+    {
+      useClass: AuthService,
+      provide: AUTH_SERVICE,
+    },
+    EncoderService,
   ],
 })
 export class ProductModule {}

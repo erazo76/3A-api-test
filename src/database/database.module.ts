@@ -7,7 +7,6 @@ import config from '../config';
 @Module({
   imports: [
     MongooseModule.forRootAsync({
-      // 👈 Implement Module
       useFactory: (configService: ConfigType<typeof config>) => {
         const { connection, user, password, host, port, dbName } =
           configService.mongo;
